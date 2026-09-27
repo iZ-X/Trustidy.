@@ -11,3 +11,9 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model SiteScan {
+  id String @id @default(uuid())
+  url String
+  createdAt DateTime @default(now())
+}
