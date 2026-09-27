@@ -15,5 +15,15 @@ datasource db {
 model SiteScan {
   id String @id @default(uuid())
   url String
+  registrarCountry String?
+  sslIssuer String?
+  hasInstagram Boolean?
+  instagramFollowers Int?
+  hasTrustpilot Boolean?
+  trustScore Int?
+  scanStatus String?
+  domainAge Int?
+  trustRating Float?
+  previewImage String?
   createdAt DateTime @default(now())
 }
