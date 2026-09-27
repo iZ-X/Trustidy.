@@ -26,4 +26,24 @@ model SiteScan {
   trustRating Float?
   previewImage String?
   createdAt DateTime @default(now())
+  listingScans ListingScan[]
+}
+
+model ListingScan {
+  id String @id @default(uuid())
+  listingUrl String
+  siteScanId String?
+  siteScan SiteScan? @relation(fields: [siteScanId], references: [id])
+  currentPrice Float?
+  priceHistoryLow Float?
+  priceHistoryHigh Float?
+  reviewCount Int?
+  averageRating Float?
+  reviewDateClustering Boolean?
+  genericReviewScore Float?
+  hasUrgencyLanguage Boolean?
+  hasReturnPolicy Boolean?
+  trustScore Int?
+  scanStatus String?
+  createdAt DateTime @default(now())
 }
