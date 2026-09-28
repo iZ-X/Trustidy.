@@ -13,6 +13,9 @@
     "prisma": "^7.10.0"
   },
   "dependencies": {
-    "@prisma/client": "^7.10.0"
+    "@prisma/client": "^7.10.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1"
   }
 }
