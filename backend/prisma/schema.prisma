@@ -20,6 +20,8 @@ model SiteScan {
   hasInstagram Boolean?
   instagramFollowers Int?
   socialProfileCount Int?
+  isFlaggedUnsafe Boolean?
+  threatType String?
   hasTrustpilot Boolean?
   trustScore Int?
   scanStatus String?

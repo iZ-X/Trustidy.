@@ -6,6 +6,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { getDomainInfo } from "./services/rdap.js";
 import { getSSLIssuer } from "./services/ssl.js";
 import { getSocialInfo } from "./services/social.js";
+import { checkSafeBrowsing } from "./services/safebrowsing.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -33,6 +34,7 @@ app.post("/api/site-scan", async (req, res) => {
     const { domainAge, registrarName } = await getDomainInfo(domain);
     const sslIssuer = await getSSLIssuer(domain);
     const { hasInstagram, socialProfileCount } = await getSocialInfo(url);
+    const { isFlaggedUnsafe, threatType } = await checkSafeBrowsing(url);
 
     const siteScan = await prisma.siteScan.create({
       data: {
@@ -42,6 +44,8 @@ app.post("/api/site-scan", async (req, res) => {
         sslIssuer,
         hasInstagram,
         socialProfileCount,
+        isFlaggedUnsafe,
+        threatType,
       },
     });
 
