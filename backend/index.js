@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { getDomainInfo } from "./services/rdap.js";
 import { getSSLIssuer } from "./services/ssl.js";
-import { getInstagramInfo } from "./services/instagram.js";
+import { getSocialInfo } from "./services/social.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -32,12 +32,17 @@ app.post("/api/site-scan", async (req, res) => {
 
     const { domainAge, registrarName } = await getDomainInfo(domain);
     const sslIssuer = await getSSLIssuer(domain);
-    const { hasInstagram } = await getInstagramInfo(url);
-
-    //
+    const { hasInstagram, socialProfileCount } = await getSocialInfo(url);
 
     const siteScan = await prisma.siteScan.create({
-      data: { url, domainAge, registrarName, sslIssuer, hasInstagram },
+      data: {
+        url,
+        domainAge,
+        registrarName,
+        sslIssuer,
+        hasInstagram,
+        socialProfileCount,
+      },
     });
 
     res.json(siteScan);

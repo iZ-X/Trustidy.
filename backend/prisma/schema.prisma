@@ -19,6 +19,7 @@ model SiteScan {
   sslIssuer String?
   hasInstagram Boolean?
   instagramFollowers Int?
+  socialProfileCount Int?
   hasTrustpilot Boolean?
   trustScore Int?
   scanStatus String?
