@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import tls from "tls";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -12,6 +13,30 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+function getSSLIssuer(domain) {
+  return new Promise((resolve) => {
+    const socket = tls.connect(
+      443,
+      domain,
+      { servername: domain, timeout: 5000 },
+      () => {
+        const cert = socket.getPeerCertificate();
+        socket.end();
+        resolve(cert.issuer?.O ?? null);
+      },
+    );
+
+    socket.on("error", () => {
+      resolve(null);
+    });
+
+    socket.on("timeout", () => {
+      socket.destroy();
+      resolve(null);
+    });
+  });
+}
 
 app.get("/", (req, res) => {
   res.send("Trustidy backend is running");
@@ -60,8 +85,12 @@ app.post("/api/site-scan", async (req, res) => {
         )?.[3] ?? null;
     }
 
+    //
+
+    const sslIssuer = await getSSLIssuer(domain);
+
     const siteScan = await prisma.siteScan.create({
-      data: { url, domainAge, registrarName },
+      data: { url, domainAge, registrarName, sslIssuer },
     });
 
     res.json(siteScan);
