@@ -3,7 +3,8 @@ import cors from "cors";
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import tls from "tls";
+import { getDomainInfo } from "./services/rdap.js";
+import { getSSLIssuer } from "./services/ssl.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -13,30 +14,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
-function getSSLIssuer(domain) {
-  return new Promise((resolve) => {
-    const socket = tls.connect(
-      443,
-      domain,
-      { servername: domain, timeout: 5000 },
-      () => {
-        const cert = socket.getPeerCertificate();
-        socket.end();
-        resolve(cert.issuer?.O ?? null);
-      },
-    );
-
-    socket.on("error", () => {
-      resolve(null);
-    });
-
-    socket.on("timeout", () => {
-      socket.destroy();
-      resolve(null);
-    });
-  });
-}
 
 app.get("/", (req, res) => {
   res.send("Trustidy backend is running");
@@ -52,42 +29,10 @@ app.post("/api/site-scan", async (req, res) => {
   try {
     const domain = new URL(url).hostname.replace("www.", "");
 
-    const rdapResponse = await fetch(`https://rdap.org/domain/${domain}`, {
-      headers: { "User-Agent": "Mozilla/5.0 (trustidy-app)" },
-    });
-
-    let domainAge = null;
-    let registrarName = null;
-
-    if (rdapResponse.ok) {
-      const rdapData = await rdapResponse.json();
-      console.log(
-        "registration event:",
-        rdapData.events?.find((e) => e.eventAction === "registration"),
-      );
-
-      const registrationEvent = rdapData.events?.find(
-        (e) => e.eventAction === "registration",
-      );
-
-      if (registrationEvent) {
-        const registeredDate = new Date(registrationEvent.eventDate);
-        const ageMs = Date.now() - registeredDate.getTime();
-        domainAge = Math.floor(ageMs / (1000 * 60 * 60 * 24 * 365));
-      }
-
-      const registrarEntity = rdapData.entities?.find((e) =>
-        e.roles.includes("registrar"),
-      );
-      registrarName =
-        registrarEntity?.vcardArray?.[1]?.find(
-          (field) => field[0] === "fn",
-        )?.[3] ?? null;
-    }
+    const { domainAge, registrarName } = await getDomainInfo(domain);
+    const sslIssuer = await getSSLIssuer(domain);
 
     //
-
-    const sslIssuer = await getSSLIssuer(domain);
 
     const siteScan = await prisma.siteScan.create({
       data: { url, domainAge, registrarName, sslIssuer },
