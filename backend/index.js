@@ -9,6 +9,7 @@ import { getSocialInfo } from "./services/social.js";
 import { checkSafeBrowsing } from "./services/safebrowsing.js";
 import { calculateTrustScore } from "./services/trustScore.js";
 import { calculateScanStatus } from "./services/scanStatus.js";
+import redisClient from "./services/redisClient.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
