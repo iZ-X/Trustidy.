@@ -33,7 +33,6 @@ app.post("/api/site-scan", async (req, res) => {
 
   try {
     const cached = await redisClient.get(url);
-    console.log("cached check res", cached);
 
     if (cached) {
       return res.json(JSON.parse(cached));
