@@ -10,6 +10,7 @@ import { checkSafeBrowsing } from "./services/safebrowsing.js";
 import { calculateTrustScore } from "./services/trustScore.js";
 import { calculateScanStatus } from "./services/scanStatus.js";
 import redisClient from "./services/redisClient.js";
+import { checkRedFlags } from "./services/redFlags.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -77,6 +78,40 @@ app.post("/api/site-scan", async (req, res) => {
     await redisClient.set(url, JSON.stringify(siteScan), { EX: 3600 });
 
     res.json(siteScan);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+app.post("/api/listing-scan", async (req, res) => {
+  const { listingUrl } = req.body;
+
+  if (!listingUrl) {
+    return res.status(400).json({ error: "listingUrl is required" });
+  }
+
+  try {
+    const domain = new URL(listingUrl).hostname.replace("www.", "");
+    //
+    const existingSiteScan = await prisma.siteScan.findFirst({
+      where: { url: { contains: domain } },
+    });
+    //
+
+    const { hasUrgencyLanguage, hasReturnPolicy } =
+      await checkRedFlags(listingUrl);
+
+    const listingScan = await prisma.listingScan.create({
+      data: {
+        listingUrl,
+        siteScanId: existingSiteScan?.id,
+        hasUrgencyLanguage,
+        hasReturnPolicy,
+      },
+    });
+
+    res.json(listingScan);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Something went wrong" });
