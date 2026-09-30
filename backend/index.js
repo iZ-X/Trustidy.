@@ -32,6 +32,13 @@ app.post("/api/site-scan", async (req, res) => {
   }
 
   try {
+    const cached = await redisClient.get(url);
+    console.log("cached check res", cached);
+
+    if (cached) {
+      return res.json(JSON.parse(cached));
+    }
+
     const domain = new URL(url).hostname.replace("www.", "");
 
     const { domainAge, registrarName } = await getDomainInfo(domain);
@@ -67,6 +74,8 @@ app.post("/api/site-scan", async (req, res) => {
         scanStatus,
       },
     });
+
+    await redisClient.set(url, JSON.stringify(siteScan), { EX: 3600 });
 
     res.json(siteScan);
   } catch (error) {
