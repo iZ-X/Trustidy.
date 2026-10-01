@@ -11,6 +11,7 @@ import { calculateTrustScore } from "./services/trustScore.js";
 import { calculateScanStatus } from "./services/scanStatus.js";
 import redisClient from "./services/redisClient.js";
 import { checkRedFlags } from "./services/redFlags.js";
+import { getCurrentPrice } from "./services/price.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -99,6 +100,23 @@ app.post("/api/listing-scan", async (req, res) => {
     });
     //
 
+    const currentPrice = await getCurrentPrice(listingUrl);
+
+    const pastScans = await prisma.listingScan.findMany({
+      where: { listingUrl },
+      select: { currentPrice: true },
+    });
+
+    const allPrices = [
+      ...pastScans.map((scan) => scan.currentPrice),
+      currentPrice,
+    ].filter((price) => price !== null);
+
+    const priceHistoryLow =
+      allPrices.length > 0 ? Math.min(...allPrices) : null;
+    const priceHistoryHigh =
+      allPrices.length > 0 ? Math.max(...allPrices) : null;
+
     const { hasUrgencyLanguage, hasReturnPolicy } =
       await checkRedFlags(listingUrl);
 
@@ -108,6 +126,9 @@ app.post("/api/listing-scan", async (req, res) => {
         siteScanId: existingSiteScan?.id,
         hasUrgencyLanguage,
         hasReturnPolicy,
+        currentPrice,
+        priceHistoryLow,
+        priceHistoryHigh,
       },
     });
 

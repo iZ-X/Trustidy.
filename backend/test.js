@@ -3,7 +3,7 @@ const response = await fetch("http://localhost:3000/api/listing-scan", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     listingUrl:
-      "https://www.nike.com/t/air-jordan-1-high-og-royal-mens-shoes-KVpEM9a8/IQ5495-005",
+      "https://www.nike.com/t/air-force-1-07-mens-shoes-DZejrQoC/CW2288-111",
   }),
 });
 
