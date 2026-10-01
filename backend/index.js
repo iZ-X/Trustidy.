@@ -12,6 +12,7 @@ import { calculateScanStatus } from "./services/scanStatus.js";
 import redisClient from "./services/redisClient.js";
 import { checkRedFlags } from "./services/redFlags.js";
 import { getCurrentPrice } from "./services/price.js";
+import { getReviewInfo } from "./services/reviews.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -120,6 +121,8 @@ app.post("/api/listing-scan", async (req, res) => {
     const { hasUrgencyLanguage, hasReturnPolicy } =
       await checkRedFlags(listingUrl);
 
+    const { reviewCount, averageRating } = await getReviewInfo(listingUrl);
+
     const listingScan = await prisma.listingScan.create({
       data: {
         listingUrl,
@@ -129,6 +132,8 @@ app.post("/api/listing-scan", async (req, res) => {
         currentPrice,
         priceHistoryLow,
         priceHistoryHigh,
+        reviewCount,
+        averageRating,
       },
     });
 
