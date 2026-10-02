@@ -15,6 +15,7 @@ import { getCurrentPrice } from "./services/price.js";
 import { getReviewInfo } from "./services/reviews.js";
 import { calculateListingTrustScore } from "./services/listingTrustScore.js";
 import { calculateListingScanStatus } from "./services/listingScanStatus.js";
+import { getReviewDetails } from "./services/reviewDetails.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -125,6 +126,9 @@ app.post("/api/listing-scan", async (req, res) => {
 
     const { reviewCount, averageRating } = await getReviewInfo(listingUrl);
 
+    const { reviewDateClustering, genericReviewScore } =
+      await getReviewDetails(listingUrl);
+
     const scanStatus = calculateListingScanStatus({
       currentPrice,
       reviewCount,
@@ -150,6 +154,8 @@ app.post("/api/listing-scan", async (req, res) => {
         averageRating,
         trustScore,
         scanStatus,
+        reviewDateClustering,
+        genericReviewScore,
       },
     });
 
