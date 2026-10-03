@@ -1,4 +1,50 @@
 import * as cheerio from "cheerio";
+import { chromium } from "playwright";
+
+async function captureReviewApiUrl(url) {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+
+  let apiUrl = null;
+
+  page.on("request", (request) => {
+    const reqUrl = request.url();
+    if (
+      !apiUrl &&
+      reqUrl.includes("/data/reviews.json") &&
+      reqUrl.includes("passkey=")
+    ) {
+      apiUrl = reqUrl;
+    }
+  });
+
+  await page.goto(url);
+
+  try {
+    await page.waitForLoadState("networkidle", { timeout: 10000 });
+  } catch (error) {
+    // continue
+  }
+
+  await browser.close();
+
+  return apiUrl;
+}
+
+async function fetchFromPowerReviews(apiUrl) {
+  try {
+    const biggerUrl = apiUrl.replace(/Limit=\d+/, "Limit=100");
+    const response = await fetch(biggerUrl);
+    const data = await response.json();
+
+    return data.Results.map((r) => ({
+      date: r.SubmissionTime,
+      text: r.ReviewText,
+    }));
+  } catch (error) {
+    return [];
+  }
+}
 
 async function getIndividualReviews(url) {
   try {
@@ -25,6 +71,18 @@ async function getIndividualReviews(url) {
         // skip
       }
     });
+
+    if (reviews.length >= 10) {
+      return reviews;
+    }
+
+    const apiUrl = await captureReviewApiUrl(url);
+    if (apiUrl) {
+      const powerReviewsResults = await fetchFromPowerReviews(apiUrl);
+      if (powerReviewsResults.length > 0) {
+        return powerReviewsResults;
+      }
+    }
 
     return reviews;
   } catch (error) {
