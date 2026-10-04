@@ -16,6 +16,7 @@ import { getReviewInfo } from "./services/reviews.js";
 import { calculateListingTrustScore } from "./services/listingTrustScore.js";
 import { calculateListingScanStatus } from "./services/listingScanStatus.js";
 import { getReviewDetails } from "./services/reviewDetails.js";
+import { getPreviewImage } from "./services/previewImage.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -50,6 +51,7 @@ app.post("/api/site-scan", async (req, res) => {
     const sslIssuer = await getSSLIssuer(domain);
     const { hasInstagram, socialProfileCount } = await getSocialInfo(url);
     const { isFlaggedUnsafe, threatType } = await checkSafeBrowsing(url);
+    const previewImage = await getPreviewImage(url);
 
     const scanStatus = calculateScanStatus({
       domainAge,
@@ -77,6 +79,7 @@ app.post("/api/site-scan", async (req, res) => {
         threatType,
         trustScore,
         scanStatus,
+        previewImage,
       },
     });
 
@@ -98,11 +101,10 @@ app.post("/api/listing-scan", async (req, res) => {
 
   try {
     const domain = new URL(listingUrl).hostname.replace("www.", "");
-    //
+
     const existingSiteScan = await prisma.siteScan.findFirst({
       where: { url: { contains: domain } },
     });
-    //
 
     const currentPrice = await getCurrentPrice(listingUrl);
 
@@ -123,11 +125,10 @@ app.post("/api/listing-scan", async (req, res) => {
 
     const { hasUrgencyLanguage, hasReturnPolicy } =
       await checkRedFlags(listingUrl);
-
     const { reviewCount, averageRating } = await getReviewInfo(listingUrl);
-
     const { reviewDateClustering, genericReviewScore } =
       await getReviewDetails(listingUrl);
+    const productImage = await getPreviewImage(listingUrl);
 
     const scanStatus = calculateListingScanStatus({
       currentPrice,
@@ -156,6 +157,7 @@ app.post("/api/listing-scan", async (req, res) => {
         scanStatus,
         reviewDateClustering,
         genericReviewScore,
+        productImage,
       },
     });
 
