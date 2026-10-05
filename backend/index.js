@@ -17,6 +17,7 @@ import { calculateListingTrustScore } from "./services/listingTrustScore.js";
 import { calculateListingScanStatus } from "./services/listingScanStatus.js";
 import { getReviewDetails } from "./services/reviewDetails.js";
 import { getPreviewImage } from "./services/previewImage.js";
+import { getEtsyListingData, getEtsyListingId } from "./services/etsy.js";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -100,6 +101,43 @@ app.post("/api/listing-scan", async (req, res) => {
   }
 
   try {
+    if (listingUrl.includes("etsy.com")) {
+      const listingId = getEtsyListingId(listingUrl);
+      const etsyData = await getEtsyListingData(listingId);
+
+      const scanStatus = calculateListingScanStatus({
+        currentPrice: etsyData.currentPrice,
+        reviewCount: etsyData.reviewCount,
+      });
+
+      const trustScore = calculateListingTrustScore({
+        averageRating: etsyData.averageRating,
+        hasUrgencyLanguage: etsyData.hasUrgencyLanguage,
+        hasReturnPolicy: etsyData.hasReturnPolicy,
+        reviewCount: etsyData.reviewCount,
+      });
+
+      const listingScan = await prisma.listingScan.create({
+        data: {
+          listingUrl,
+          currentPrice: etsyData.currentPrice,
+          priceHistoryLow: etsyData.currentPrice,
+          priceHistoryHigh: etsyData.currentPrice,
+          reviewCount: etsyData.reviewCount,
+          reviewDateClustering: etsyData.reviewDateClustering,
+          genericReviewScore: etsyData.genericReviewScore,
+          hasReturnPolicy: etsyData.hasReturnPolicy,
+          productImage: etsyData.productImage,
+          hasUrgencyLanguage: etsyData.hasUrgencyLanguage,
+          trustScore,
+          scanStatus,
+          averageRating: etsyData.averageRating,
+        },
+      });
+
+      return res.json(listingScan);
+    }
+
     const domain = new URL(listingUrl).hostname.replace("www.", "");
 
     const existingSiteScan = await prisma.siteScan.findFirst({

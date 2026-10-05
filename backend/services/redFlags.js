@@ -1,4 +1,4 @@
-const URGENCY_PHRASES = [
+export const URGENCY_PHRASES = [
   "only 1 left",
   "only a few left",
   "hurry",

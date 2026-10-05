@@ -2,12 +2,18 @@ import {
   calculateDateClustering,
   calculateGenericScore,
 } from "./reviewDetails.js";
+import { URGENCY_PHRASES } from "./redFlags.js";
 
 const API_KEY = process.env.ETSY_API_KEY;
 const SHARED_SECRET = process.env.ETSY_SHARED_SECRET;
 
 function getHeaders() {
   return { "x-api-key": `${API_KEY}:${SHARED_SECRET}` };
+}
+
+export function getEtsyListingId(url) {
+  const match = url.match(/\/listing\/(\d+)/);
+  return match ? match[1] : null;
 }
 
 async function getListingDetails(listingId) {
@@ -30,12 +36,18 @@ async function getShopReviews(shopId, listingId) {
     .map((r) => ({
       date: new Date(r.create_timestamp * 1000).toISOString(),
       text: r.review,
+      rating: r.rating,
     }));
 }
 
 export async function getEtsyListingData(listingId) {
   try {
     const listing = await getListingDetails(listingId);
+
+    const listingText = `${listing.title} ${listing.description}`.toLowerCase();
+    const hasUrgencyLanguage = URGENCY_PHRASES.some((phrase) =>
+      listingText.includes(phrase),
+    );
 
     const currentPrice = listing.price
       ? listing.price.amount / listing.price.divisor
@@ -46,11 +58,18 @@ export async function getEtsyListingData(listingId) {
 
     const reviews = await getShopReviews(listing.shop_id, listingId);
 
+    const averageRating =
+      reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : null;
+
     return {
       currentPrice,
       productImage,
       hasReturnPolicy,
+      hasUrgencyLanguage,
       reviewCount: reviews.length,
+      averageRating,
       reviewDateClustering: calculateDateClustering(reviews),
       genericReviewScore: calculateGenericScore(reviews),
     };
