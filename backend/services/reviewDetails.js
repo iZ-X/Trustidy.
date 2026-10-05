@@ -90,7 +90,7 @@ async function getIndividualReviews(url) {
   }
 }
 
-function calculateDateClustering(reviews) {
+export function calculateDateClustering(reviews) {
   if (reviews.length < 10) return null;
 
   const dayCounts = {};
@@ -110,7 +110,7 @@ function calculateDateClustering(reviews) {
   return percentage > 0.4;
 }
 
-function calculateGenericScore(reviews) {
+export function calculateGenericScore(reviews) {
   if (reviews.length < 10) return null;
 
   const genericCount = reviews.filter((r) => {
