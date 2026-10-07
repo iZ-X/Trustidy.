@@ -8,12 +8,18 @@ function isListingUrl(url) {
 function App() {
   const [url, setUrl] = useState("");
 
-  function handleSubmit() {
-    if (isListingUrl(url)) {
-      console.log("This looks like a listing:", url);
-    } else {
-      console.log("This looks like a site:", url);
-    }
+  async function handleSubmit() {
+    const endpoint = isListingUrl(url) ? "/api/listing-scan" : "/api/site-scan";
+    const bodyKey = isListingUrl(url) ? "listingUrl" : "url";
+
+    const response = await fetch(`http://localhost:3000${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ [bodyKey]: url }),
+    });
+
+    const data = await response.json();
+    console.log(data);
   }
 
   return (
