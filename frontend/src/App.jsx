@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function isListingUrl(url) {
   const listingPatterns = ["/listing/", "/products/", "/t/", "/dp/", "/itm/"];
@@ -7,6 +8,7 @@ function isListingUrl(url) {
 
 function App() {
   const [url, setUrl] = useState("");
+  const navigate = useNavigate();
 
   async function handleSubmit() {
     const endpoint = isListingUrl(url) ? "/api/listing-scan" : "/api/site-scan";
@@ -19,7 +21,7 @@ function App() {
     });
 
     const data = await response.json();
-    console.log(data);
+    navigate("/results", { state: data });
   }
 
   return (
