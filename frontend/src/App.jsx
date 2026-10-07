@@ -1,7 +1,40 @@
+import { useState } from "react";
+
+function isListingUrl(url) {
+  const listingPatterns = ["/listing/", "/products/", "/t/", "/dp/", "/itm/"];
+  return listingPatterns.some((pattern) => url.includes(pattern));
+}
+
 function App() {
+  const [url, setUrl] = useState("");
+
+  function handleSubmit() {
+    if (isListingUrl(url)) {
+      console.log("This looks like a listing:", url);
+    } else {
+      console.log("This looks like a site:", url);
+    }
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-3xl font-bold">Trustidy</h1>
+    <div className="h-screen flex flex-col items-center justify-start p-2 px-4">
+      <h1 className="text-3xl font-bold mb-2">Trustidy</h1>
+      <section className="w-full flex-1 flex flex-col items-center justify-center">
+        <div className="bg-red-200 w-[90%] h-[26%] flex flex-row items-center gap-4 justify-between p-4">
+          <div className="bg-amber-300 w-[75%] h-full p-4 flex items-center justify-center">
+            <input
+              className=" w-full h-full"
+              type="text"
+              placeholder="Link here."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            ></input>
+          </div>
+          <button className="w-[25%] h-full bg-amber-50" onClick={handleSubmit}>
+            Submit
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
