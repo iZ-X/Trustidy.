@@ -11,17 +11,50 @@ function App() {
   const navigate = useNavigate();
 
   async function handleSubmit() {
-    const endpoint = isListingUrl(url) ? "/api/listing-scan" : "/api/site-scan";
-    const bodyKey = isListingUrl(url) ? "listingUrl" : "url";
+    if (!url.trim()) {
+      alert("Please enter a url.");
+      return;
+    }
 
-    const response = await fetch(`http://localhost:3000${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ [bodyKey]: url }),
-    });
+    let normalizedUrl = url.trim();
+    if (
+      !normalizedUrl.startsWith("http://") &&
+      !normalizedUrl.startsWith("https://")
+    ) {
+      normalizedUrl = `https://${normalizedUrl}`;
+    }
 
-    const data = await response.json();
-    navigate("/results", { state: data });
+    try {
+      new URL(normalizedUrl);
+    } catch (e) {
+      alert("Please enter a valid url (e.g http://nike.com).");
+      return;
+    }
+
+    try {
+      const endpoint = isListingUrl(normalizedUrl)
+        ? "/api/listing-scan"
+        : "/api/site-scan";
+      const bodyKey = isListingUrl(normalizedUrl) ? "listingUrl" : "url";
+
+      const response = await fetch(`http://localhost:3000${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [bodyKey]: normalizedUrl }),
+      });
+
+      if (!response.ok) {
+        alert("Something went wrong whilst scanning, try again.");
+        return;
+      }
+
+      const data = await response.json();
+      navigate("/results", { state: data });
+    } catch (error) {
+      alert(
+        "Couldn't reach the server. Please check your connection and try again.",
+      );
+    }
   }
 
   return (
