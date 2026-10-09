@@ -52,8 +52,7 @@ export async function getEtsyListingData(listingId) {
     const currentPrice = listing.price
       ? listing.price.amount / listing.price.divisor
       : null;
-    const productImage =
-      listing.images?.find((img) => img.rank === 1)?.url_570xN ?? null;
+    const productImage = listing.images?.map((img) => img.url_570xN) ?? null;
     const hasReturnPolicy = !!listing.return_policy_id;
 
     const reviews = await getShopReviews(listing.shop_id, listingId);
