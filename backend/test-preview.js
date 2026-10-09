@@ -1,11 +1,16 @@
-import * as cheerio from "cheerio";
+// import * as cheerio from "cheerio";
 
-const url = "https:nike.com";
+// const url = "https:nike.com";
 
-const response = await fetch(url);
-const html = await response.text();
-const $ = cheerio.load(html);
+// const response = await fetch(url);
+// const html = await response.text();
+// const $ = cheerio.load(html);
 
-const ogImage = $("meta[property='og:image']").attr("content");
+// const ogImage = $("meta[property='og:image']").attr("content");
 
-console.log("OG Image:", ogImage);
+// console.log("OG Image:", ogImage);
+
+import { getPreviewImage } from "./services/previewImage.js";
+
+const result = await getPreviewImage("https://nike.com");
+console.log(result);

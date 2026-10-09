@@ -6,9 +6,14 @@ export async function getPreviewImage(url) {
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    const ogImage = $("meta[property='og:image']").attr("content");
+    const images = [];
 
-    return ogImage;
+    $("meta[property='og:image']").each((i, el) => {
+      const imageUrl = $(el).attr("content");
+      images.push(imageUrl);
+    });
+
+    return images.length > 0 ? images : null;
   } catch (error) {
     return null;
   }
