@@ -52,7 +52,9 @@ function App() {
       }
 
       const data = await response.json();
-      navigate("/results", { state: data });
+      navigate(`/results/${data.id}`, {
+        state: { isListing: isListingUrl(normalizedUrl) },
+      });
     } catch (error) {
       alert(
         "Couldn't reach the server. Please check your connection and try again.",

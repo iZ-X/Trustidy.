@@ -1,11 +1,57 @@
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function ResultPage() {
+  const { id } = useParams();
   const location = useLocation();
-  const data = location.state;
+  // const data = location.state;
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  if (!data) {
+  useEffect(() => {
+    async function fetchData() {
+      const isListing = location.state?.isListing;
+
+      async function tryFetch(endpoint) {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}${endpoint}/${id}`,
+        );
+        return response.ok ? await response.json() : null;
+      }
+
+      let result = null;
+
+      if (isListing === true) {
+        result = await tryFetch("/api/listing-scan");
+      } else if (isListing === false) {
+        result = await tryFetch("/api/site-scan");
+      } else {
+        result = await tryFetch("/api/listing-scan");
+        if (!result) {
+          result = await tryFetch("/api/site-scan");
+        }
+      }
+
+      if (!result) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+
+      setData(result);
+      setLoading(false);
+    }
+
+    fetchData();
+  }, [id]);
+
+  if (loading) {
+    return <div className="p-4 text-center">Loading...</div>;
+  }
+
+  if (notFound || !data) {
     return (
       <div className="p-4 text-center">
         <p>No scan data found.</p>
