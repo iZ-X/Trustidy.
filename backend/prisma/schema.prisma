@@ -27,7 +27,7 @@ model SiteScan {
   scanStatus String?
   domainAge Int?
   trustRating Float?
-  previewImage String?
+  previewImage String[]
   createdAt DateTime @default(now())
   listingScans ListingScan[]
 }
@@ -48,6 +48,6 @@ model ListingScan {
   hasReturnPolicy Boolean?
   trustScore Int?
   scanStatus String?
-  productImage String?
+  productImage String[]
   createdAt DateTime @default(now())
 }
