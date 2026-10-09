@@ -84,12 +84,17 @@ function ResultPage() {
         <>
           <div className="bg-white border rounded-lg p-4 mb-4">
             <h2 className="text-lg font-semibold mb-2">Product</h2>
-            {data.productImage && (
-              <img
-                src={data.productImage}
-                alt="Product"
-                className="w-32 h-32 object-cover rounded mb-2"
-              ></img>
+            {data.productImage && data.productImage.length > 0 && (
+              <div className="flex gap-2 overflow-x-auto mb-2">
+                {data.productImage.map((imgUrl, index) => (
+                  <img
+                    key={index}
+                    src={imgUrl}
+                    alt={`Product ${index + 1}`}
+                    className="w-32 h-32 object-cover rounded shrink-0"
+                  />
+                ))}
+              </div>
             )}
             <p>Price: ${data.currentPrice}</p>
             <p>
@@ -142,12 +147,22 @@ function ResultPage() {
         <>
           <div className="bg-white border rounded-lg p-4 mb-4">
             <h2 className="text-lg font-semibold mb-2">Domain</h2>
-            {data.previewImage && (
-              <img
-                src={data.previewImage}
-                alt="Image"
-                className="w-32 h-32 object-cover rounded mb-2"
-              ></img>
+            {data.previewImage && data.previewImage.length > 0 && (
+              <div className="flex gap-2 overflow-x-auto mb-2">
+                {data.previewImage.map((imgUrl, index) => (
+                  <img
+                    key={index}
+                    src={imgUrl}
+                    alt={`Product ${index + 1}`}
+                    className="w-32 h-32 object-cover rounded shrink-0"
+                  ></img>
+                ))}
+              </div>
+              // <img
+              //   src={data.previewImage}
+              //   alt="Image"
+              //   className="w-32 h-32 object-cover rounded mb-2"
+              // ></img>
             )}
             <p>Link: {data.url}</p>
             <p>
