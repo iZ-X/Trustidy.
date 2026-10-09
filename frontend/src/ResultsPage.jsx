@@ -1,13 +1,30 @@
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function ResultPage() {
   const location = useLocation();
   const data = location.state;
+
+  if (!data) {
+    return (
+      <div className="p-4 text-center">
+        <p>No scan data found.</p>
+        <Link to="/" className="text-blue-600 underline">
+          Go back home
+        </Link>
+      </div>
+    );
+  }
+
   const isListing = data.listingUrl !== undefined;
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Results</h1>
+
+      <Link to="/" className="text-blue-600 underline mb-4 inline-block">
+        ← Scan another
+      </Link>
 
       <div className="bg-gray-100 rounded-lg pb-6 mb-4 text-center">
         <p className="text-sm text-gray-500 uppercase tracking-wide">

@@ -37,11 +37,14 @@ function App() {
         : "/api/site-scan";
       const bodyKey = isListingUrl(normalizedUrl) ? "listingUrl" : "url";
 
-      const response = await fetch(`http://localhost:3000${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [bodyKey]: normalizedUrl }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}${endpoint}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ [bodyKey]: normalizedUrl }),
+        },
+      );
 
       if (!response.ok) {
         alert("Something went wrong whilst scanning, try again.");

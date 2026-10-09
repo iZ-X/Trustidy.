@@ -18,6 +18,7 @@ import { calculateListingScanStatus } from "./services/listingScanStatus.js";
 import { getReviewDetails } from "./services/reviewDetails.js";
 import { getPreviewImage } from "./services/previewImage.js";
 import { getEtsyListingData, getEtsyListingId } from "./services/etsy.js";
+import { errors } from "playwright";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -85,6 +86,25 @@ app.post("/api/site-scan", async (req, res) => {
     });
 
     await redisClient.set(url, JSON.stringify(siteScan), { EX: 3600 });
+
+    res.json(siteScan);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+app.get("/api/site-scan/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const siteScan = await prisma.siteScan.findUnique({
+      where: { id },
+    });
+
+    if (!siteScan) {
+      return res.status(404).json({ error: "Scan not found" });
+    }
 
     res.json(siteScan);
   } catch (error) {
@@ -198,6 +218,25 @@ app.post("/api/listing-scan", async (req, res) => {
         productImage,
       },
     });
+
+    res.json(listingScan);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+app.get("/api/listing-scan/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const listingScan = await prisma.listingScan.findUnique({
+      where: { id },
+    });
+
+    if (!listingScan) {
+      return res.status(404).json({ error: "Scan not found" });
+    }
 
     res.json(listingScan);
   } catch (error) {
