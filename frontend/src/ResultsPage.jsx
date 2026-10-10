@@ -158,11 +158,6 @@ function ResultPage() {
                   ></img>
                 ))}
               </div>
-              // <img
-              //   src={data.previewImage}
-              //   alt="Image"
-              //   className="w-32 h-32 object-cover rounded mb-2"
-              // ></img>
             )}
             <p>Link: {data.url}</p>
             <p>
