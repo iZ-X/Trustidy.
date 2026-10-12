@@ -251,171 +251,210 @@ function ResultPage() {
               </div>
             </div>
           </section>
-        </>
-      ) : (
-        <>
-          <div className="bg-white border rounded-lg p-4 mb-4">
-            <h2 className="text-lg font-semibold mb-2">Domain</h2>
-            {data.previewImage && data.previewImage.length > 0 && (
+          {/* this one above is the one im working on for the final. */}
+          {/* <div className="bg-white border rounded-lg p-4 mb-4">
+            <h2 className="text-lg font-semibold mb-2">Product</h2>
+            {data.productImage && data.productImage.length > 0 && (
               <div className="flex gap-2 overflow-x-auto mb-2">
-                {data.previewImage.map((imgUrl, index) => (
+                {data.productImage.map((imgUrl, index) => (
                   <img
                     key={index}
                     src={imgUrl}
                     alt={`Product ${index + 1}`}
                     className="w-32 h-32 object-cover rounded shrink-0"
-                  ></img>
+                  />
                 ))}
               </div>
             )}
-            <p>Link: {data.url}</p>
+            <p>Price: ${data.currentPrice}</p>
             <p>
-              Domain info: Age: {data.domainAge}, Registrar name:{" "}
-              {data.registrarName}
+              Price range seen: ${data.priceHistoryLow} - $
+              {data.priceHistoryHigh}
             </p>
           </div>
 
           <div className="bg-white border rounded-lg p-4 mb-4">
-            <h2 className="text-lg font-semibold mb-2">Social presence</h2>
-            <p>Has Instagram?: {data.hasInstagram ? "Yes" : "No"}</p>
-            <p>Social Media platform total: {data.socialProfileCount}</p>
-          </div>
-
-          <div className="bg-white border rounded-lg p-4 mb-4">
-            <h2 className="text-lg font-semibold mb-2">Security Concerns</h2>
-            <p>SSL Issuer: {data.sslIssuer ?? "None!"}</p>
+            <h2 className="text-lg font-semibold mb-2">Reviews</h2>
+            <p>Count: {data.reviewCount}</p>
+            <p>Average Rating: {data.averageRating ?? "N/A"}</p>
             <p>
-              Flagged Unsafe:{" "}
-              {data.isFlaggedUnsafe === null
-                ? "Not checked"
-                : data.isFlaggedUnsafe
-                  ? "⚠️ Yes"
+              Suspicious date clustering: {""}
+              {data.reviewDateClustering === null
+                ? "Not enough data"
+                : data.reviewDateClustering
+                  ? "Yes"
                   : "No"}
             </p>
-            <p>Threat Type: {data.threatType ?? "None!"}</p>
+            <p>
+              Generic review score: {""}
+              {data.genericReviewScore === null
+                ? "Not enough data"
+                : `${data.genericReviewScore}%`}
+            </p>
           </div>
+
+          <div className="bg-white border rounded-lg p-4 mb-4">
+            <h2 className="text-lg font-semibold mb-2">Red Flags</h2>
+            <p>
+              Urgency language: {""}
+              {data.hasUrgencyLanguage === null
+                ? "Not checked"
+                : data.hasUrgencyLanguage
+                  ? "⚠️ Detected"
+                  : "None detected"}
+            </p>
+            <p>
+              Return policy: {""}
+              {data.hasReturnPolicy === null
+                ? "Not checked"
+                : data.hasReturnPolicy
+                  ? "Present"
+                  : "Not found"}
+            </p>
+          </div> */}
+        </>
+      ) : (
+        <>
+          <section className="w-full flex-1 flex flex-col items-center justify-center font-quicksand">
+            <div className=" rounded-lg border-2 border-ink3 w-[70%] h-[70%] bg-white flex flex-row items-center gap-4 justify-between p-6 shadow-md">
+              <div className=" w-[99%] h-full  flex flex-row items-center justify-between gap-4">
+                <div className="bg-ink2 w-[28%] rounded-md h-full flex flex-col items-center justify-start py-8">
+                  <div className="bg-black w-[85%] h-[60%] rounded-lg">
+                    <img
+                      src={data.previewImage}
+                      className="w-full h-full object-cover"
+                    ></img>
+                  </div>
+                  <div className="w-[90%] h-[35%]  text-xl flex flex-col p-2 gap-4 pt-2">
+                    <p className="text-ink">Link: {data.url}</p>
+                  </div>
+                </div>
+                <div className="w-[70%] h-full  grid grid-flow-col grid-cols-3 grid-rows-6 px-8 py-8 gap-4">
+                  <div className="rounded-lg border-2 border-ink3 bg-white row-span-5 col-span-1 p-4">
+                    <div className="w-full h-full flex flex-col items-center justify-center">
+                      <div className=" w-full h-[25%]">
+                        <span className="text-lg text-black rounded-lg">
+                          This score reflects the domain’s age, SSL certificate,
+                          Instagram presence, social media reach, and whether
+                          Google has flagged the site as unsafe.
+                        </span>
+                      </div>
+                      <div className=" w-full h-[40%]"></div>
+                      <div className=" w-full h-[35%] flex flex-col items-start justify-end">
+                        <div className="flex flex-row items-end justify-center gap-2">
+                          <h1 className="text-black text-9xl">
+                            {data.trustScore}
+                          </h1>
+                          <span className="text-ink font-semibold text-xl">
+                            trust score
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border-2 border-ink3 bg-white flex items-center justify-center text-lg">
+                    <Link to="/">← return to Scan another</Link>
+                  </div>
+                  <div className="rounded-lg border-2 border-ink3 bg-white row-span-2 col-span-2 p-4">
+                    <div className="w-full h-full  flex flex-row items-center justify-center">
+                      <div className="w-[50%] h-full  flex flex-col items-start justify-end gap-4">
+                        <h2 className="text-2xl w-full h-[60%]  flex items-end">
+                          Domain Age:
+                        </h2>
+                        <div className="w-full h-[40%]  flex flex-row items-end justify-start">
+                          <h1 className="text-7xl">{data.domainAge}</h1>
+                          <span className="text-ink font-semibold">years</span>
+                        </div>
+                      </div>
+                      <div className="w-[50%] h-full flex flex-col items-start justify-end gap-4">
+                        <h2 className="text-2xl w-full h-[60%]  flex items-end">
+                          SSL Issuer:
+                        </h2>
+                        <div className="w-full h-[40%]  flex flex-row items-end justify-start">
+                          <h1 className="text-7xl">{data.sslIssuer}</h1>
+                          <span className="text-ink font-semibold"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border-2 border-ink3 bg-white row-span-3 col-span-1 p-4">
+                    <div className="w-full h-full  flex flex-col items-start justify-center">
+                      <div className="h-[50%] w-full flex flex-col items-start justify-end gap-4">
+                        <h2 className="text-2xl w-full h-[60%]  flex items-end">
+                          Flagged Unsafe:
+                        </h2>
+                        <div className="w-full h-[40%]  flex flex-row items-end justify-start">
+                          <h1 className="text-5xl">
+                            {data.isFlaggedUnsafe === null
+                              ? "Not checked"
+                              : data.isFlaggedUnsafe
+                                ? "⚠️ Yes"
+                                : "No"}
+                          </h1>
+                          <p></p>
+                        </div>
+                      </div>
+                      <div className="h-[50%] w-full  flex flex-col items-start justify-end gap-4">
+                        <h2 className="text-2xl w-full h-[60%]  flex items-end">
+                          Threat Type:
+                        </h2>
+                        <div className="w-full h-[40%]  flex flex-row items-end gap-4 justify-start">
+                          <h1 className="text-5xl">
+                            {data.threatType ?? "None!"}
+                          </h1>
+                          <span className="text-ink font-semibold"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border-2 border-ink3 bg-white flex flex-row items-center justify-center gap-2 p-4">
+                    <div className="bg-verified w-3.5 h-3.5 rounded-full text-lg"></div>
+                    <span
+                      className={
+                        data.scanStatus === "complete"
+                          ? "text-verified"
+                          : data.scanStatus === "partial"
+                            ? "text-seal"
+                            : "text-flag"
+                      }
+                    >
+                      {data.scanStatus}
+                    </span>
+                  </div>
+                  <div className="rounded-lg border-2 border-ink3 bg-white row-span-4 col-span-1 p-4">
+                    <div className="w-full h-full  flex flex-col items-start justify-center gap-4">
+                      <div className="h-[50%] w-full flex flex-col items-start justify-end gap-4">
+                        <h2 className="text-2xl w-full h-[30%]  flex items-end">
+                          Registrar:
+                        </h2>
+                        <div className="w-full h-[70%]   flex flex-col items-start justify-start">
+                          <h1 className="text-xl">
+                            Name: {data.registrarName}
+                          </h1>
+                        </div>
+                      </div>
+                      <div className="h-[50%] w-full  flex flex-col items-start justify-end gap-4 mt-8">
+                        <h2 className="text-2xl w-full h-[30%]  flex items-end">
+                          Social Media:
+                        </h2>
+                        <div className="w-full h-[70%]  flex flex-col items-start justify-start">
+                          <h1 className="text-xl">
+                            Has an Instagram: {data.hasInstagram ? "Yes" : "No"}
+                          </h1>
+                          <h1 className="text-xl">
+                            Social Media Accounts: {data.socialProfileCount}
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </>
       )}
     </div>
-
-    //   <section className="w-full flex-1 flex flex-col items-center justify-center font-quicksand">
-    //           <div className=" rounded-lg border-2 border-ink3 w-[70%] h-[70%] bg-white flex flex-row items-center gap-4 justify-between p-6 shadow-md">
-    //             <div className=" w-[99%] h-full  flex flex-row items-center justify-between gap-4">
-    //               <div className="bg-ink2 w-[28%] rounded-md h-full flex flex-col items-center justify-start py-8">
-    //                 <div className="bg-black w-[90%] h-[65%]"></div>
-    //                 <div className="w-[90%] h-[7%]  p-2 text-lg flex flex-row items-center justify-center gap-4 mt-5">
-    //                   <button className="cursor-pointer">&lt;</button>
-    //                   <h2>1/15</h2>
-    //                   <button className="cursor-pointer">&gt;</button>
-    //                 </div>
-    //                 <div className="w-[90%] h-[35%]  text-xl flex flex-col p-2 gap-4 pt-2">
-    //                   <p>Link: </p>
-    //                   <p>Site: </p>
-    //                   <p>Item: </p>
-    //                 </div>
-    //               </div>
-    //               <div className="w-[70%] h-full  grid grid-flow-col grid-cols-3 grid-rows-6 px-8 py-8 gap-4">
-    //                 <div className="rounded-lg border-2 border-ink3 bg-white row-span-5 col-span-1 p-4">
-    //                   <div className="w-full h-full flex flex-col items-center justify-center">
-    //                     <div className=" w-full h-[25%]">
-    //                       <span className="text-xl text-black">
-    //                         This is calculated based on ssl issuer,
-    //                         njnjnjenfjnejfn jkrnjfn fjrnfjrnjfn, rejnfejfnjenjn.
-    //                         SITE SITE
-    //                       </span>
-    //                     </div>
-    //                     <div className=" w-full h-[40%]"></div>
-    //                     <div className=" w-full h-[35%] flex flex-col items-start justify-end">
-    //                       <div className="flex flex-row items-end justify-center gap-2">
-    //                         <h1 className="text-black text-9xl">86</h1>
-    //                         <span className="text-gray-300 text-xl">
-    //                           trust score
-    //                         </span>
-    //                       </div>
-    //                       <span className="text-blue-500 text-2xl">valid</span>
-    //                     </div>
-    //                   </div>
-    //                 </div>
-    //                 <div className="rounded-lg border-2 border-ink3 bg-white flex items-center justify-center">
-    //                   <Link to="/">← return to Scan another</Link>
-    //                 </div>
-    //                 <div className="rounded-lg border-2 border-ink3 bg-white row-span-2 col-span-2 p-4">
-    //                   <div className="w-full h-full  flex flex-row items-center justify-center">
-    //                     <div className="w-[50%] h-full  flex flex-col items-start justify-end gap-4">
-    //                       <h2 className="text-2xl w-full h-[60%]  flex items-end">
-    //                         Domain Age:
-    //                       </h2>
-    //                       <div className="w-full h-[40%]  flex flex-row items-end justify-start">
-    //                         <h1 className="text-7xl">31</h1>
-    //                         <span>years</span>
-    //                       </div>
-    //                     </div>
-    //                     <div className="w-[50%] h-full flex flex-col items-start justify-end gap-4">
-    //                       <h2 className="text-2xl w-full h-[60%]  flex items-end">
-    //                         SSL Issuer:
-    //                       </h2>
-    //                       <div className="w-full h-[40%]  flex flex-row items-end justify-start">
-    //                         <h1 className="text-4xl">Google Trust Services</h1>
-    //                         <span></span>
-    //                       </div>
-    //                     </div>
-    //                   </div>
-    //                 </div>
-    //                 <div className="rounded-lg border-2 border-ink3 bg-white row-span-3 col-span-1 p-4">
-    //                   <div className="w-full h-full  flex flex-col items-start justify-center">
-    //                     <div className="w-[50%] h-full flex flex-col items-start justify-end gap-4">
-    //                       <h2 className="text-2xl w-full h-[60%]  flex items-end">
-    //                         Instagram:
-    //                       </h2>
-    //                       <div className="w-full h-[40%]  flex flex-row items-end justify-start">
-    //                         <h1 className="text-6xl">Yes</h1>
-    //                         <p>(link)</p>
-    //                       </div>
-    //                     </div>
-    //                     <div className="w-[50%] h-full  flex flex-col items-start justify-end gap-4">
-    //                       <h2 className="text-2xl w-full h-[60%]  flex items-end">
-    //                         Social Profiles:
-    //                       </h2>
-    //                       <div className="w-full h-[40%]  flex flex-row items-end justify-start">
-    //                         <h1 className="text-6xl">7</h1>
-    //                         <span>accounts</span>
-    //                       </div>
-    //                     </div>
-    //                   </div>
-    //                 </div>
-    //                 <div className="rounded-lg border-2 border-ink3 bg-white flex items-center justify-center p-4">
-    //                   <span>online</span>
-    //                 </div>
-    //                 <div className="rounded-lg border-2 border-ink3 bg-white row-span-4 col-span-1 p-4">
-    //                   <div className="w-full h-full  flex flex-col items-start justify-center gap-4">
-    //                     <div className="h-[50%] w-full flex flex-col items-start justify-end gap-4">
-    //                       <h2 className="text-2xl w-full h-[30%]  flex items-end">
-    //                         Reviews:
-    //                       </h2>
-    //                       <div className="w-full h-[70%]   flex flex-col items-start justify-start">
-    //                         <h1 className="text-2xl">Count: </h1>
-    //                         <h1 className="text-2xl">Average Rating: </h1>
-    //                         <h1 className="text-2xl">
-    //                           Suspicious date clustering:
-    //                         </h1>
-    //                         <h1 className="text-2xl">Generic review score: </h1>
-    //                       </div>
-    //                     </div>
-    //                     <div className="h-[50%] w-full  flex flex-col items-start justify-end gap-4 mt-8">
-    //                       <h2 className="text-2xl w-full h-[30%]  flex items-end">
-    //                         Red Flags:
-    //                       </h2>
-    //                       <div className="w-full h-[70%]  flex flex-col items-start justify-start">
-    //                         <h1 className="text-2xl">Urgency Language: </h1>
-    //                         <h1 className="text-2xl">Return Policy: </h1>
-    //                       </div>
-    //                     </div>
-    //                   </div>
-    //                 </div>
-    //               </div>
-    //             </div>
-    //           </div>
-    //         </section>
   );
 }
 
