@@ -1,1 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monsieur+La+Doulaise&family=Quicksand:wght@300..700&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --color-paper: #f5f5f5;
+  --color-ink: #a3a3a3;
+  --color-ink2: #2e2e2e;
+  --color-ink3: #ebebeb;
+  --color-verified: #2f6b4f;
+  --color-flag: #b23a2e;
+  --color-slate: #5c6570;
+  --color-seal: #c98a2b;
+  --color-stars: #eab003;
+  --color-paper2: #f9f9f9;
+
+  /*fonts*/
+  --font-averia: "Averia Libre", system-ui;
+  --font-quicksand: "Quicksand", sans-serif;
+  --font-monsieur: "Monsieur La Doulaise", cursive;
+}

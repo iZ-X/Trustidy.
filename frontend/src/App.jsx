@@ -63,22 +63,36 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col items-center justify-start p-2 px-4">
-      <h1 className="text-3xl font-bold mb-2">Trustidy</h1>
+    <div className="bg-paper h-screen flex flex-col items-center justify-start p-2 px-4">
+      <h1 className="text-3xl tracking-wider font-semibold  h-[10%] mb-2 flex flex-col items-center justify-center font-averia">
+        Trustidy
+      </h1>
       <section className="w-full flex-1 flex flex-col items-center justify-center">
-        <div className="bg-red-200 w-[90%] h-[26%] flex flex-row items-center gap-4 justify-between p-4">
-          <div className="bg-amber-300 w-[75%] h-full p-4 flex items-center justify-center">
+        <div className=" rounded-2xl border-2 border-ink3 w-[70%] h-[28%] bg-white flex flex-row items-center gap-4 justify-between p-6 shadow-md">
+          <div className=" w-[99%] h-full p-4 flex flex-col items-center justify-center">
             <input
-              className=" w-full h-full"
+              className="font-quicksand w-full h-[75%] text-2xl text-ink2 focus:outline-none focus:ring-0 "
               type="text"
-              placeholder="Link here."
+              placeholder="Link here: (e.g, nike.com)"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
             ></input>
+            <div className=" w-full h-[25%] flex flex-row items-center justify-between px-4 py-2">
+              <button
+                title="Add Image"
+                className="hover:text-ink2  transition-colors duration-500 cursor-pointer text-ink text-3xl text-center  w-[4.5%] h-[75%] flex items-center justify-center"
+              >
+                +
+              </button>
+              <button
+                title="Submit"
+                onClick={handleSubmit}
+                className="hover:bg-blue-500 transition-colors duration-500 cursor-pointer text-paper2 text-3xl font-semibold rounded-sm flex items-center justify-center bg-blue-400 w-[2.5%] h-[99%]"
+              >
+                ↑
+              </button>
+            </div>
           </div>
-          <button className="w-[25%] h-full bg-amber-50" onClick={handleSubmit}>
-            Submit
-          </button>
         </div>
       </section>
     </div>
