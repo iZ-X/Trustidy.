@@ -9,6 +9,7 @@ function isListingUrl(url) {
 function App() {
   const [url, setUrl] = useState("");
   const navigate = useNavigate();
+  const [isScanning, setIsScanning] = useState(false);
 
   async function handleSubmit() {
     if (!url.trim()) {
@@ -31,6 +32,7 @@ function App() {
       return;
     }
 
+    setIsScanning(true);
     try {
       const endpoint = isListingUrl(normalizedUrl)
         ? "/api/listing-scan"
@@ -56,6 +58,7 @@ function App() {
         state: { isListing: isListingUrl(normalizedUrl) },
       });
     } catch (error) {
+      setIsScanning(false);
       alert(
         "Couldn't reach the server. Please check your connection and try again.",
       );
@@ -70,13 +73,25 @@ function App() {
       <section className="w-full flex-1 flex flex-col items-center justify-center">
         <div className=" rounded-2xl border-2 border-ink3 w-[70%] h-[28%] bg-white flex flex-row items-center gap-4 justify-between p-6 shadow-md">
           <div className=" w-[99%] h-full p-4 flex flex-col items-center justify-center">
-            <input
-              className="font-quicksand w-full h-[75%] text-2xl text-ink2 focus:outline-none focus:ring-0 "
-              type="text"
-              placeholder="Link here: (e.g, nike.com)"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            ></input>
+            {isScanning ? (
+              <p
+                className="font-quicksand w-full h-[75%] text-2xl text-transparent bg-clip-text bg-size[200%_100%] animate-shimmer"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(90deg, #1B2A4A 25%, #a3a3a3 50%, #ebebeb 75%)",
+                }}
+              >
+                {url}
+              </p>
+            ) : (
+              <input
+                className="font-quicksand w-full h-[75%] text-2xl text-ink2 focus:outline-none focus:ring-0 "
+                type="text"
+                placeholder="Link here: (e.g, nike.com)"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+              ></input>
+            )}
             <div className=" w-full h-[25%] flex flex-row items-center justify-between px-4 py-2">
               <button
                 title="Add Image"

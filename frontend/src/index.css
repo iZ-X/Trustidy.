@@ -17,4 +17,16 @@
   --font-averia: "Averia Libre", system-ui;
   --font-quicksand: "Quicksand", sans-serif;
   --font-monsieur: "Monsieur La Doulaise", cursive;
+
+  /*animate*/
+  --animate-shimmer: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }

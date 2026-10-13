@@ -48,7 +48,43 @@ function ResultPage() {
   }, [id]);
 
   if (loading) {
-    return <div className="p-4 text-center">Loading...</div>;
+    return (
+      <div className="bg-paper h-screen flex flex-col items-center justify-start p-2 px-4">
+        <h1 className="text-3xl tracking-wider font-semibold h-[10%] mb-2 flex flex-col items-center justify-center font-averia">
+          Trustidy
+        </h1>
+        <section className="w-full flex-1 flex flex-col items-center justify-center font-quicksand">
+          <div className="rounded-lg border-2 border-ink3 w-[70%] h-[70%] bg-white flex flex-row items-center gap-4 justify-between p-6 shadow-md">
+            <div className="w-[99%] h-full flex flex-row items-center justify-between gap-4">
+              <div className="bg-ink2 w-[28%] rounded-md h-full flex flex-col items-center justify-start py-8">
+                <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-[85%] h-[60%] rounded-lg"></div>
+                <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-[90%] h-6 rounded mt-5"></div>
+              </div>
+              <div className="w-[70%] h-full grid grid-flow-col grid-cols-3 grid-rows-6 px-8 py-8 gap-4">
+                <div className="rounded-lg border-2 border-ink3 bg-white row-span-5 col-span-1 p-4">
+                  <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-full h-full rounded"></div>
+                </div>
+                <div className="rounded-lg border-2 border-ink3 bg-white">
+                  <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-full h-full rounded"></div>
+                </div>
+                <div className="rounded-lg border-2 border-ink3 bg-white row-span-2 col-span-2 p-4">
+                  <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-full h-full rounded"></div>
+                </div>
+                <div className="rounded-lg border-2 border-ink3 bg-white row-span-3 col-span-1 p-4">
+                  <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-full h-full rounded"></div>
+                </div>
+                <div className="rounded-lg border-2 border-ink3 bg-white">
+                  <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-full h-full rounded"></div>
+                </div>
+                <div className="rounded-lg border-2 border-ink3 bg-white row-span-4 col-span-1 p-4">
+                  <div className="bg-slate/20 bg-[length:200%_100%] animate-shimmer w-full h-full rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   if (notFound || !data) {
@@ -107,7 +143,9 @@ function ResultPage() {
                     </button>
                   </div>
                   <div className="w-[90%] h-[35%]  text-xl flex flex-col p-2 gap-4 pt-2">
-                    <p className="text-ink">Link: {data.listingUrl}</p>
+                    <p className="text-ink overflow-auto">
+                      Link Scanned: {data.listingUrl}
+                    </p>
                   </div>
                 </div>
                 <div className="w-[70%] h-full  grid grid-flow-col grid-cols-3 grid-rows-6 px-8 py-8 gap-4">
@@ -176,11 +214,11 @@ function ResultPage() {
                         <h2 className="text-2xl w-full h-[60%]  flex items-end">
                           Price Range Seen:
                         </h2>
-                        <div className="w-full h-[40%]  flex flex-row items-end gap-4 justify-start">
-                          <h1 className="text-5xl">
+                        <div className="w-full h-[40%]  flex flex-row items-end justify-start gap-2 ">
+                          <h1 className="text-2xl flex flex-row items-center">
                             ${data.priceHistoryLow} - ${data.priceHistoryHigh}
                           </h1>
-                          <span className="text-ink font-semibold">
+                          <span className="font-xs text-ink font-semibold">
                             (low - high)
                           </span>
                         </div>
@@ -251,67 +289,6 @@ function ResultPage() {
               </div>
             </div>
           </section>
-          {/* this one above is the one im working on for the final. */}
-          {/* <div className="bg-white border rounded-lg p-4 mb-4">
-            <h2 className="text-lg font-semibold mb-2">Product</h2>
-            {data.productImage && data.productImage.length > 0 && (
-              <div className="flex gap-2 overflow-x-auto mb-2">
-                {data.productImage.map((imgUrl, index) => (
-                  <img
-                    key={index}
-                    src={imgUrl}
-                    alt={`Product ${index + 1}`}
-                    className="w-32 h-32 object-cover rounded shrink-0"
-                  />
-                ))}
-              </div>
-            )}
-            <p>Price: ${data.currentPrice}</p>
-            <p>
-              Price range seen: ${data.priceHistoryLow} - $
-              {data.priceHistoryHigh}
-            </p>
-          </div>
-
-          <div className="bg-white border rounded-lg p-4 mb-4">
-            <h2 className="text-lg font-semibold mb-2">Reviews</h2>
-            <p>Count: {data.reviewCount}</p>
-            <p>Average Rating: {data.averageRating ?? "N/A"}</p>
-            <p>
-              Suspicious date clustering: {""}
-              {data.reviewDateClustering === null
-                ? "Not enough data"
-                : data.reviewDateClustering
-                  ? "Yes"
-                  : "No"}
-            </p>
-            <p>
-              Generic review score: {""}
-              {data.genericReviewScore === null
-                ? "Not enough data"
-                : `${data.genericReviewScore}%`}
-            </p>
-          </div>
-
-          <div className="bg-white border rounded-lg p-4 mb-4">
-            <h2 className="text-lg font-semibold mb-2">Red Flags</h2>
-            <p>
-              Urgency language: {""}
-              {data.hasUrgencyLanguage === null
-                ? "Not checked"
-                : data.hasUrgencyLanguage
-                  ? "⚠️ Detected"
-                  : "None detected"}
-            </p>
-            <p>
-              Return policy: {""}
-              {data.hasReturnPolicy === null
-                ? "Not checked"
-                : data.hasReturnPolicy
-                  ? "Present"
-                  : "Not found"}
-            </p>
-          </div> */}
         </>
       ) : (
         <>
@@ -326,7 +303,7 @@ function ResultPage() {
                     ></img>
                   </div>
                   <div className="w-[90%] h-[35%]  text-xl flex flex-col p-2 gap-4 pt-2">
-                    <p className="text-ink">Link: {data.url}</p>
+                    <p className="text-ink">Link Scanned: {data.url}</p>
                   </div>
                 </div>
                 <div className="w-[70%] h-full  grid grid-flow-col grid-cols-3 grid-rows-6 px-8 py-8 gap-4">
