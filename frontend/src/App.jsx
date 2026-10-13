@@ -67,15 +67,15 @@ function App() {
 
   return (
     <div className="bg-paper h-screen flex flex-col items-center justify-start p-2 px-4">
-      <h1 className="text-3xl tracking-wider font-semibold  h-[10%] mb-2 flex flex-col items-center justify-center font-averia">
+      <h1 className="text-2xl sm:text-3xl tracking-wider font-semibold h-[10%] mb-2 flex flex-col items-center justify-center font-averia">
         Trustidy
       </h1>
       <section className="w-full flex-1 flex flex-col items-center justify-center">
-        <div className=" rounded-2xl border-2 border-ink3 w-[70%] h-[28%] bg-white flex flex-row items-center gap-4 justify-between p-6 shadow-md">
-          <div className=" w-[99%] h-full p-4 flex flex-col items-center justify-center">
+        <div className="rounded-2xl border-2 border-ink3 w-[95%] sm:w-[85%] xl:w-[70%] h-auto xl:h-[28%] bg-white flex flex-row items-center gap-4 justify-between p-4 sm:p-6 shadow-md">
+          <div className="w-[99%] h-full p-2 sm:p-4 flex flex-col items-center justify-center">
             {isScanning ? (
               <p
-                className="font-quicksand w-full h-[75%] text-2xl text-transparent bg-clip-text bg-size[200%_100%] animate-shimmer"
+                className="font-quicksand w-full h-[75%] text-base sm:text-xl xl:text-2xl text-transparent bg-clip-text bg-[length:200%_100%] animate-shimmer"
                 style={{
                   backgroundImage:
                     "linear-gradient(90deg, #1B2A4A 25%, #a3a3a3 50%, #ebebeb 75%)",
@@ -85,24 +85,24 @@ function App() {
               </p>
             ) : (
               <input
-                className="font-quicksand w-full h-[75%] text-2xl text-ink2 focus:outline-none focus:ring-0 "
+                className="font-quicksand w-full h-[75%] text-base sm:text-xl xl:text-2xl text-ink2 focus:outline-none focus:ring-0"
                 type="text"
                 placeholder="Link here: (e.g, nike.com)"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               ></input>
             )}
-            <div className=" w-full h-[25%] flex flex-row items-center justify-between px-4 py-2">
+            <div className="w-full h-[25%] flex flex-row items-center justify-between px-4 py-2">
               <button
                 title="Add Image"
-                className="hover:text-ink2  transition-colors duration-500 cursor-pointer text-ink text-3xl text-center  w-[4.5%] h-[75%] flex items-center justify-center"
+                className="hover:text-ink2 transition-colors duration-500 cursor-pointer text-ink text-2xl sm:text-3xl text-center w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
               >
                 +
               </button>
               <button
                 title="Submit"
                 onClick={handleSubmit}
-                className="hover:bg-blue-500 transition-colors duration-500 cursor-pointer text-paper2 text-3xl font-semibold rounded-sm flex items-center justify-center bg-blue-400 w-[2.5%] h-[99%]"
+                className="hover:bg-blue-500 transition-colors duration-500 cursor-pointer text-paper2 text-2xl sm:text-3xl font-semibold rounded-sm flex items-center justify-center bg-blue-400 w-8 h-8 sm:w-10 sm:h-10"
               >
                 ↑
               </button>
