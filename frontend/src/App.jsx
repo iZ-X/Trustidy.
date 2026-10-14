@@ -75,7 +75,7 @@ function App() {
           <div className="w-[99%] h-full p-2 sm:p-4 flex flex-col items-center justify-center">
             {isScanning ? (
               <p
-                className="font-quicksand w-full h-[75%] text-base sm:text-xl xl:text-2xl text-transparent bg-clip-text bg-[length:200%_100%] animate-shimmer"
+                className="font-quicksand w-full h-[75%] text-base sm:text-xl xl:text-2xl text-transparent bg-clip-text bg-[length:200%_100%] animate-shimmer flex flex-row items-center justify-start"
                 style={{
                   backgroundImage:
                     "linear-gradient(90deg, #1B2A4A 25%, #a3a3a3 50%, #ebebeb 75%)",
@@ -93,12 +93,7 @@ function App() {
               ></input>
             )}
             <div className="w-full h-[25%] flex flex-row items-center justify-between px-4 py-2">
-              <button
-                title="Add Image"
-                className="hover:text-ink2 transition-colors duration-500 cursor-pointer text-ink text-2xl sm:text-3xl text-center w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
-              >
-                +
-              </button>
+              <button className="hover:text-ink2 transition-colors duration-500 cursor-pointer text-ink text-2xl sm:text-3xl text-center w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"></button>
               <button
                 title="Submit"
                 onClick={handleSubmit}
