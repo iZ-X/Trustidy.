@@ -19,6 +19,5 @@ export function calculateTrustScore(signals) {
     score = 0;
   }
 
-  return score;
+  return Math.min(Math.max(score, 0), 100);
 }
-//fix this nike.com has a 120 trust score must be under 100.

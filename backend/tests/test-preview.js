@@ -10,7 +10,7 @@
 
 // console.log("OG Image:", ogImage);
 
-import { getPreviewImage } from "./services/previewImage.js";
+import { getPreviewImage } from "../services/previewImage.js";
 
 const result = await getPreviewImage("https://nike.com");
 console.log(result);
